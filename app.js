@@ -6,21 +6,6 @@ const path = require("path");
 app.use(bodyParser.json());
 
 app.set("view engine", "ejs");
-
-app.get("/", async (request, response) => {
-  const allTodos = await Todo.getTodos();
-  if (request.accepts("html")) {
-    response.render("index", {
-      allTodos,
-    });
-  } else {
-    response.json({
-      allTodos,
-    });
-  }
-});
-
-app.use(express.static(path.join(__dirname, "public")));
 // eslint-disable-next-line no-undef
 app.use(express.static(path.join(__dirname, "public")));
 
