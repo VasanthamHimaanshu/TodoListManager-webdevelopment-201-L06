@@ -5,20 +5,28 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="./css/style.css" rel="stylesheet"> 
-    <title>Document</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <title>My Todo-List</title>
 </head>
 <body>
-    <%- include("header.ejs"); %>
-    <table>
-        <% for(let i=0;i<allTodos.length;i++) {%>
-            <tr>
-                <td>
-                    <%= allTodos[i].title%>
-                </td>
-            </tr>
-        <%}%>
-    </table>
-    <%- include("footer.ejs"); %>
-    
+    <div class="grid grid-cols-6">
+        <div class="col-start-3 col-span-2">
+            <%- include("header.ejs"); %>
+            <form action="">
+                <div class="flex gap-2 py-4">
+                    <div class="flex-auto">
+                        <input type="text" placeholder="What's next ?" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm" required>
+                    </div>
+                    <div class="flex-auto border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4" >
+                        <input type="date"/>
+                    </div>
+                    <div class="flex-none">
+                        <button type="submit" class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2">Add</button>
+                    </div>
+                </div> 
+            </form> 
+            <%- include('todos.ejs') %>
+            <div>
+        </div>
 </body>
 </html>

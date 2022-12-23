@@ -1,4 +1,11 @@
 body {
-  background-color: rgb(147, 133, 133);
+  background-color: rgb(255, 255, 255);
   color: rgb(12, 12, 13);
+}
+
+.Todo-Item:hover .trash-icon {
+  display: block;
+}
+h5 {
+  display: inline;
 }
