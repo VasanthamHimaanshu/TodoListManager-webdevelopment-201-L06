@@ -1,5 +1,3 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable no-undef */
 "use strict";
 const { Model, Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
@@ -15,60 +13,10 @@ module.exports = (sequelize, DataTypes) => {
     static addTodo({ title, dueDate }) {
       return this.create({ title: title, dueDate: dueDate, completed: false });
     }
-    static getTodos() {
-      return this.findAll();
-    }
-    static async showList() {
-      console.log("My Todo list \n");
-      console.log("Overdue");
-      // FILL IN HERE
-      console.log(
-        (await Todo.overdue())
-          .map((x) => {
-            x.displayableString();
-          })
-          .join("\n")
-      );
-      console.log("\n");
-      console.log("Due Today");
-      // FILL IN HERE
-      console.log(
-        (await Todo.dueToday())
-          .map((x) => {
-            x.displayableString();
-          })
-          .join("\n")
-      );
-      console.log("\n");
-      console.log("Due Later");
-      // FILL IN HERE
-      console.log(
-        (await Todo.dueLater())
-          .map((x) => {
-            x.displayableString();
-          })
-          .join("\n")
-      );
-    }
 
-    static async completedTodo() {
-      return await Todo.findAll({
-        where: {
-          completed: true,
-        },
-      });
-    }
-    static addTodo({ title, dueDate }) {
-      return this.create({ title: title, dueDate: dueDate, completed: false });
-    }
-    setCompletionStatus(completed) {
-      console.log(completed);
-      return this.update({ completed: completed });
-    }
     markAsCompleted() {
       return this.update({ completed: true });
     }
-
     static async overdue() {
       return await Todo.findAll({
         where: {
@@ -95,15 +43,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         order: [["id", "ASC"]],
       });
-    }
-
-    displayableString() {
-      let checkbox = this.completed ? "[x]" : "[ ]";
-      return `${this.id}. ${checkbox} ${this.title} ${
-        this.dueDate == new Date().toLocaleDateString("en-CA")
-          ? ""
-          : this.dueDate
-      }`.trim();
     }
   }
   Todo.init(
