@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="csrf-token" content="<%= csrfToken %>" />
     <link href="./css/style.css" rel="stylesheet" />
+    <title>My Todo-list</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       var token = document
@@ -29,7 +30,6 @@
           })
           .catch((err) => console.error(err));
       };
-
       const deleteTodo = (id) => {
         fetch(`/todos/${id}`, {
           method: "delete",
@@ -46,12 +46,11 @@
           .catch((err) => console.error(err));
       };
     </script>
-    <title>My Todo-List</title>
   </head>
   <body>
-    <div class="grid grid-cols-6">
-      <div class="col-start-3 col-span-2">
-        <%- include("header.ejs"); %>
+    <div class="grid grid-cols-3">
+      <div class="col-start-2 colspan-3">
+        <%- include('header') %>
         <form action="/todos" name="f1" method="post">
           <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
           <div class="flex gap-2 py-4">
@@ -60,7 +59,7 @@
                 type="text"
                 id="todotext"
                 name="title"
-                placeholder="What's next ?"
+                placeholder="what's next ?"
                 class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"
                 required
                 pattern=".*\S+.*"
@@ -68,9 +67,7 @@
                 oninput="this.setCustomValidity('')"
               />
             </div>
-            <div
-              class="flex-auto border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4"
-            >
+            <div class="flex-auto">
               <input
                 type="date"
                 name="dueDate"
