@@ -51,52 +51,34 @@
     <div class="grid grid-cols-3">
       <div class="col-start-2 colspan-3">
         <%- include('header') %>
+        <a href="/signout">Signout</a>
         <p class="py-2">
           <a href="/signout" class="text-green-600">Signout</a>
         </p>
-        <form action="/todos" name="f1" method="post">
-          <input type="hidden" name="_csrf" value="<%= csrfToken%>" />
-          <div class="flex gap-2 py-4">
-            <div class="flex-auto">
-              <input
-                type="text"
-                id="todotext"
-                name="title"
-                placeholder="what's next ?"
-                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm"
-              />
-            </div>
-            <div class="flex-auto">
-              <input
-                type="date"
-                name="dueDate"
-                class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4"
-              />
+        <form action="/todos" method="post" onsubmit="validate()">
+          <input type="hidden" name="_csrf" value="<%=csrfToken %>" />
+            <div class="flex gap-2 p-4">
+                <div class="flex-auto">
+                    <input type="text" title="Enter atleast 2 characters.Remove space in the beginning" pattern="([^\s][A-z0-9À-ž\s]+)" name="title" placeholder="whats next?" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm" required/>
+                </div>
+            <div class="flex-auto " >
+                <input type="date" name="dueDate" class="border border-gray-300 rounded text-gray-900 w-full p-2 text-sm leading-4" required/>
             </div>
             <div class="flex-none">
-              <button
-                type="submit"
-                class="bg-green-600 text-white px-5 py-1.5 rounded font-medium mr-2 mb-2"
-              >
-                Add
-              </button>
+                <button type="submit"   class="bg-black text-white px-5 py-2 rounded font-medium py-1.5">Add</button>
             </div>
-          </div>
-        </form>
-        <div>
-          <%- include('todo.ejs', {title: "Overdue", data: overdue}) %> <%-
-          include('todo.ejs', {title: "Due Today", data: dueToday}) %> <%-
-          include('todo.ejs', {title: "Due Later", data: dueLater}) %> <%-
-          include('todo.ejs', {title: "Completed Items", data: completed}) %>
         </div>
-        <div class="py-3">
-          <% if(messages && messages.error && messages.error.length > 0)  { %>
-            <% for(var i=0; i<messages.error.length; i++) { %>
-                    <li class="text-red-600"> <%= messages.error[i] %></li>
-            <% } %>
-          <% } %>
-        </div>
-      </div>
+    </form>
+    <div>
+        
     </div>
-  </body>
+    <div>
+      <%- include('todo.ejs', {title: "Overdue" , data: overdue}) %>
+      <%- include('todo.ejs', {title: "Due Today" , data: dueToday}) %>
+      <%- include('todo.ejs', {title: "Due Later" , data: dueLater}) %>
+      <%- include('todo.ejs', {title: "Completed items" , data: completed}) %>
+    </div>    
+    <a href="/signout" class="underline text-blue-600 hover:text-blue-800 visited:text-purple-600" >Signout</a>
+</div>
+</body>
 </html>
