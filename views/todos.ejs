@@ -30,7 +30,7 @@
           })
           .catch((err) => console.error(err));
       };
-      function deleteTodo = (id) => {
+      const deleteTodo = (id) => {
         fetch(`/todos/${id}`, {
           method: "delete",
           headers: { "content-Type": "application/json" },
