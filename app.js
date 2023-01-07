@@ -82,7 +82,7 @@ passport.deserializeUser((id, done) => {
 
 app.get("/", async (request, response) => {
   if (request.user) {
-    return response.redirect("/todo");
+    return response.redirect("/todos");
   } else {
     response.render("index", {
       title: "Todo Application",
@@ -99,11 +99,10 @@ app.get(
     const loggedInUser = request.user.id;
     const firstName = request.user.firstName;
     const lastName = request.user.lastName;
-    const allTodos = await Todo.getTodos(loggedInUser);
     const overdue = await Todo.overdue(loggedInUser);
     const dueToday = await Todo.dueToday(loggedInUser);
     const dueLater = await Todo.dueLater(loggedInUser);
-    const completed = await Todo.completed(loggedInUser);
+    const completed = await Todo.completedTodo(loggedInUser);
     if (request.accepts("html")) {
       response.render("todos", {
        firstName,
