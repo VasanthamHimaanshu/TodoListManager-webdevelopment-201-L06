@@ -30,7 +30,7 @@ app.use(
   session({
     secret: "my-super-secret-key-8790532282",
     Cookie: {
-      maxAge: 24 * 60 * 60 * 1000, //24hrs
+      maxAge: 24 * 60 * 60 * 1000, 
     },
   })
 );
@@ -95,7 +95,10 @@ app.get(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async function (request, response) {
+  try {
     const loggedInUser = request.user.id;
+    const firstName = request.user.firstName;
+    const lastName = request.user.lastName;
     const allTodos = await Todo.getTodos(loggedInUser);
     const overdue = await Todo.overdue(loggedInUser);
     const dueToday = await Todo.dueToday(loggedInUser);
@@ -103,6 +106,8 @@ app.get(
     const completed = await Todo.completed(loggedInUser);
     if (request.accepts("html")) {
       response.render("todos", {
+       firstName,
+       lastName,
         title: "Todo application",
         overdue,
         dueToday,
@@ -112,13 +117,18 @@ app.get(
       });
     } else {
       response.json({
+       firstName,
+        lastName,
         overdue,
         dueToday,
         dueLater,
         completed,
       });
     }
-  }
+  } catch (err) {
+      console.log(err);
+    }
+    }
 );
 
 app.get("/signup", (request, response) => {
@@ -173,45 +183,42 @@ app.get("/signup", (request, response) => {
 });
 
 app.post("/users", async (request, response) => {
-  const fname = request.body.firstName;
-  const mail = request.body.email;
-  const pwd = request.body.password;
-
-  if (!fname) {
-    request.flash("error", "Please make sure you enter first name");
+  let pattern = new RegExp("^\\s");
+  let result = Boolean(pattern.test(request.body.firstname));
+  console.log(result);
+  if (result) {
+    request.flash("error", "First name Required");
     return response.redirect("/signup");
   }
-  if (!mail) {
-    request.flash("error", "Please make sure you enter Email-ID");
+  if (request.body.email.length == 0) {
+    request.flash("error", "Email Required");
     return response.redirect("/signup");
   }
-  if (!pwd) {
-    request.flash("error", "Please make sure you enter valid password");
+  if (request.body.password.length == 0) {
+    request.flash("error", "Password Required");
     return response.redirect("/signup");
   }
-  if (pwd < 8) {
-    request.flash("error", "Password length should be atleast 8");
-    return response.redirect("/signup");
-  }
-  const hashedpwd = await bcrypt.hash(request.body.password, saltRounds);
-  console.log(hashedpwd);
+  console.log("creating new User", request.body);
+  const hashedPwd = await bcrypt.hash(request.body.password, saltRounds);
   try {
     const user = await User.create({
       firstName: request.body.firstName,
       lastName: request.body.lastName,
       email: request.body.email,
-      password: hashedpwd,
+      password: hashedPwd,
     });
     request.login(user, (err) => {
       if (err) {
         console.log(err);
-        response.redirect("/login");
+        response.redirect("/todos");
+      } else {
+        request.flash("success", "Successfully Signed up");
+        response.redirect("/todos");
       }
-      response.redirect("/todos");
     });
   } catch (error) {
     console.log(error);
-    request.flash("error", error.message);
+    request.flash("error", "Email already exits");
     return response.redirect("/signup");
   }
 });
@@ -220,17 +227,21 @@ app.post(
   "/todos",
   connectEnsureLogin.ensureLoggedIn(),
   async (request, response) => {
+    let pattern = new RegExp("^\\s");
+    let result = Boolean(pattern.test(request.body.title));
     console.log(request.user);
-
-    const tname = request.body.title;
-
-    if (tname.length < 5) {
-      request.flash(
-        "error",
-        "Please make sure title should be more than 5 letters"
-      );
+    if (result) {
+      request.flash("error", "Enter the title");
+      return response.redirect("/todos");
+    } else if (request.body.title.length < 5) {
+      request.flash("error", "Title should be atleast 5 character");
       return response.redirect("/todos");
     }
+    if (request.body.dueDate.length == 0) {
+      request.flash("error", "Enter the dueDate");
+      return response.redirect("/todos");
+    }
+    console.log("creating new todo", request.body);
     try {
       await Todo.addTodo({
         title: request.body.title,
@@ -244,6 +255,7 @@ app.post(
     }
   }
 );
+    
 
 app.post(
   "/session",
