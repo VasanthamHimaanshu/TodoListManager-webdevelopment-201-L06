@@ -13,7 +13,6 @@ const session = require("express-session");
 const LocalStrategy = require("passport-local");
 const bcrypt = require("bcrypt");
 const flash = require("connect-flash");
-var Regex = require("regex");
 
 const saltRounds = 10;
 
