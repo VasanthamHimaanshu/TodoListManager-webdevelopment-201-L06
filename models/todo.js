@@ -86,9 +86,6 @@ module.exports = (sequelize, DataTypes) => {
     static getTodos() {
       return this.findAll();
     }
-    markAsCompleted() {
-      return this.update({ completed: true });
-    }
     static async remove(id, userId) {
       return this.destroy({
         where: {
